@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block title %}Bookmark List{% endblock %}
+
+{% block content %}
+
+<div class="btn-group">
+  <a href="{% url 'add' %}" class="btn btn-info">Add Bookmark</a>
+</div>
+<p></p>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Site</th>
+      <th scope="col">URL</th>
+      <th scope="col">Modify</th>
+      <th scope="col">Delete</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in object_list %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td><a href="{% url 'detail' pk=i.id %}">{{ i.site_name }}</a></td>
+      <td><a href="{{ i.url }}">{{ i.url }}</a></td>
+      <td><a href="{% url 'update' pk=i.id %}" class="btn btn-success">Modify</a></td>
+      <td><a href="{% url 'delete' pk=i.id %}" class="btn btn-danger">Delete</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+<div class="row">
+  <div class="col-sm-4">
+    <form method="get">
+      <input type="text" class="searchfield" name="q" placeholder="Search...">
+    </form>
+  </div>
+  <div class="col-sm-4">
+    {% if is_paginated %}
+    <nav aria-label="Topics pagination" class="mb-4">
+      <ul class="pagination">
+
+        {% if page_obj.number > 1 %}
+        <li class="page-item">
+          <a class="page-link" href="?page=1">First</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">First</span>
+        </li>
+        {% endif %}
+
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Previous</span>
+        </li>
+        {% endif %}
+
+        {% for page_num in paginator.page_range %}
+        {% if page_obj.number == page_num %}
+        <li class="page-item active">
+          <span class="page-link">
+            {{ page_num }}
+            <span class="sr-only">(current)</span>
+          </span>
+        </li>
+        {% elif page_num > page_obj.number|add:'-3' and page_num < page_obj.number|add:'3' %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Next</span>
+        </li>
+        {% endif %}
+
+        {% if page_obj.number != paginator.num_pages %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ paginator.num_pages }}">Last</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Last</span>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

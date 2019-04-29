@@ -1,0 +1,5 @@
+*.pyc
+*~
+__paycach__
+db.sqlite3
+.DS_Store
